@@ -1,3 +1,4 @@
 .vscode
 *.json
 *.class
+.DS_Store

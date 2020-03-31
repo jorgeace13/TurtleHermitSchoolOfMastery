@@ -1,6 +1,11 @@
 import javafx.application.Application;
 import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.paint.*;
+import javafx.scene.shape.*;
 import javafx.scene.layout.*;
+import javafx.scene.image.Image;
 import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.geometry.Pos;
@@ -14,6 +19,7 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.File;
 
 
 public class TurtleHermitSchoolOfMastery extends Application{
@@ -27,6 +33,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
   private int expAddedFromLect;
   private int expAddedFromEdVid;
   private int expAddedFromRead;
+  private int expAddedFromTeach;
 
   private long designTasksCompleted;
   private long codingTasksCompleted;
@@ -34,6 +41,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
   private long lectureTasksCompleted;
   private long edVidTasksCompleted;
   private long readingTasksCompleted;
+  private long teachingTasksCompleted;
 
   private double kidGoku = 0.0;
   private double teenGoku = 500000.0;
@@ -56,62 +64,105 @@ public class TurtleHermitSchoolOfMastery extends Application{
     primaryStage.setTitle("Turtle Hermit School Of Mastery");
 
     Text currPowerLvl = new Text("Current\nPower Level");
+    currPowerLvl.setFont(Font.font("Verdana", FontWeight.BOLD, 17));
     Text nextTransformation = new Text("Next\nTransformation");
+    nextTransformation.setFont(Font.font("Verdana", FontWeight.BOLD, 17));
 
     Text expTxt = new Text("Experience Bar");
+    expTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
     Text trainingRegimen = new Text("Training Regimen");
+    Font font = Font.font("Verdana", FontWeight.BOLD, 18);
+    trainingRegimen.setFont(font);
 
     Text Designing = new Text("Designing - 600 exp");
+    Designing.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text Coding = new Text("Coding - 500 exp");
+    Coding.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text Writing = new Text("Writing - 400 exp");
+    Writing.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text Lectures = new Text("Lectures - 300 exp");
+    Lectures.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text edVids = new Text("Educational Videos - 200 exp");
+    edVids.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text Reading = new Text("Reading - 100 exp");
+    Reading.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+    Text Teaching = new Text("Teaching - 700 exp");
+    Teaching.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     Text effD = new Text("Effort: ");
+    effD.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text effC = new Text("Effort: ");
+    effC.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text effW = new Text("Effort: ");
+    effW.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text effL = new Text("Effort: ");
+    effL.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text effE = new Text("Effort: ");
+    effE.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text effR = new Text("Effort: ");
+    effR.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+    Text effT = new Text("Effort: ");
+    effT.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     Text history = new Text("History");
+    history.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+
 
     Text designTasksCompletedTxt = new Text("Designing Tasks Completed: ");
+    designTasksCompletedTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     String desTasCompletedStr = Long.toString(designTasksCompleted);
     Text designTasksCompletedNumTxt = new Text(desTasCompletedStr);
+    designTasksCompletedNumTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     Text codingTasksCompletedTxt = new Text("Coding Tasks Completed: ");
+    codingTasksCompletedTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     String codTasCompletedStr = Long.toString(codingTasksCompleted);
     Text codingTasksCompletedNumTxt = new Text(codTasCompletedStr);
+    codingTasksCompletedNumTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     Text writingTasksCompletedTxt = new Text("Writing Tasks Completed: ");
+    writingTasksCompletedTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     String wriTasCompletedStr = Long.toString(writingTasksCompleted);
     Text writingTasksCompletedNumTxt = new Text(wriTasCompletedStr);
+    writingTasksCompletedNumTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     Text lectureTasksCompletedTxt = new Text("Lecture Tasks Completed: ");
+    lectureTasksCompletedTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     String lecTasCompletedStr = Long.toString(lectureTasksCompleted);
     Text lectureTasksCompletedNumTxt = new Text(lecTasCompletedStr);
+    lectureTasksCompletedNumTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     Text edVidTasksCompletedTxt = new Text("Educational Videos Watched: ");
+    edVidTasksCompletedTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     String edVidTasCompletedStr = Long.toString(edVidTasksCompleted);
     Text edVidTasksCompletedNumTxt = new Text(edVidTasCompletedStr);
+    edVidTasksCompletedNumTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     Text readingTasksCompletedTxt = new Text("Reading Tasks Completed: ");
+    readingTasksCompletedTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     String readTasCompletedStr = Long.toString(readingTasksCompleted);
     Text readingTasksCompletedNumTxt = new Text(readTasCompletedStr);
+    readingTasksCompletedNumTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+
+    Text teachingTasksCompletedTxt = new Text("Teaching Tasks Completed: ");
+    teachingTasksCompletedTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+    String teachTasCompletedStr = Long.toString(teachingTasksCompleted);
+    Text teachingTasksCompletedNumTxt = new Text(teachTasCompletedStr);
+    teachingTasksCompletedNumTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     String currPLStr = Double.toString(currentPL);
     Text currPLnum = new Text(currPLStr);
+    currPLnum.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
     String nextTransformationStr = Double.toString(nextTransformationPL);
     Text nextTransformationTxt = new Text(nextTransformationStr);
+    nextTransformationTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
 
     ProgressBar expBar = new ProgressBar();
     expBar.setPrefWidth(700.0);
     double expProgress = (currentPL / nextTransformationPL);
     expBar.setProgress(expProgress);
 
-    VBox expVB = new VBox(12);
+    VBox expVB = new VBox();
     expVB.getChildren().add(expTxt);
     expVB.getChildren().add(expBar);
 
@@ -127,6 +178,10 @@ public class TurtleHermitSchoolOfMastery extends Application{
     VBox bottomVB = new VBox(10);
     bottomVB.getChildren().add(history);
 
+    HBox teachHisHB = new HBox();
+    teachHisHB.getChildren().add(teachingTasksCompletedTxt);
+    teachHisHB.getChildren().add(teachingTasksCompletedNumTxt);
+    bottomVB.getChildren().add(teachHisHB);
     HBox desHisHB = new HBox();
     desHisHB.getChildren().add(designTasksCompletedTxt);
     desHisHB.getChildren().add(designTasksCompletedNumTxt);
@@ -151,10 +206,83 @@ public class TurtleHermitSchoolOfMastery extends Application{
     readHisHB.getChildren().add(readingTasksCompletedTxt);
     readHisHB.getChildren().add(readingTasksCompletedNumTxt);
     bottomVB.getChildren().add(readHisHB);
-
-    VBox vbox = new VBox(30);
+    
+    VBox vbox = new VBox(25);
     vbox.getChildren().add(expVB);
     vbox.getChildren().add(trainingRegimen);
+
+
+    RadioButton[] teachingArr = new RadioButton[10];
+    ToggleGroup teachingGroup = new ToggleGroup();
+    HBox effortT = new HBox(10);
+    effortT.getChildren().add(effT);
+    for(int j = 0; j < 10; j++){
+      int i = j + 1;
+      String s = Integer.toString(i);
+      RadioButton rbTeach = new RadioButton(s);
+      teachingArr[j] = rbTeach;
+      rbTeach.setToggleGroup(teachingGroup);
+      effortT.getChildren().add(rbTeach);
+    }
+    vbox.getChildren().add(Teaching);
+    vbox.getChildren().add(effortT);
+    Button bt7 = new Button("Complete");
+    effortT.getChildren().add(bt7);
+
+    EventHandler<ActionEvent> teachHandler = e -> {
+      if(teachingArr[0].isSelected()){
+        expAddedFromTeach = 700;
+      }
+      else if(teachingArr[1].isSelected()){
+        expAddedFromTeach = 1400;
+      }
+      else if(teachingArr[2].isSelected()){
+        expAddedFromTeach = 2100;
+      }
+      else if(teachingArr[3].isSelected()){
+        expAddedFromTeach = 2800;
+      }
+      else if(teachingArr[4].isSelected()){
+        expAddedFromTeach = 3500;
+      }
+      else if(teachingArr[5].isSelected()){
+        expAddedFromTeach = 4200;
+      }
+      else if(teachingArr[6].isSelected()){
+        expAddedFromTeach = 4900;
+      }
+      else if(teachingArr[7].isSelected()){
+        expAddedFromTeach = 5600;
+      }
+      else if(teachingArr[8].isSelected()){
+        expAddedFromTeach = 6300;
+      }
+      else if(teachingArr[9].isSelected()){
+        expAddedFromTeach = 7000;
+      }
+    };
+    for(int i = 0; i < teachingArr.length; i++){
+      teachingArr[i].setOnAction(teachHandler);
+    }
+    bt7.setOnAction(e -> {
+      currentPL += expAddedFromTeach;
+      if(expAddedFromTeach != 0){
+        teachingTasksCompleted += 1;
+      }
+      updateFile();
+      System.out.println(currentPL);
+      for(int i = 0; i < 10; i++){
+        if(teachingArr[i].isSelected()){
+          teachingArr[i].setSelected(false);
+        }
+      }
+      String plStr = Double.toString(currentPL);
+      currPLnum.setText(plStr);
+      expAddedFromTeach = 0;
+      expBar.setProgress(currentPL / nextTransformationPL);
+      String teachTasksCompletedStr = Long.toString(teachingTasksCompleted);
+      teachingTasksCompletedNumTxt.setText(teachTasksCompletedStr);
+    });
 
 
     RadioButton[] designArr = new RadioButton[10];
@@ -595,7 +723,18 @@ public class TurtleHermitSchoolOfMastery extends Application{
     });
 
 
+    BackgroundImage myBI= new BackgroundImage(new Image("./BG9.jpg"),
+        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+        new BackgroundSize(BackgroundSize.AUTO,
+        BackgroundSize.AUTO,
+         false,
+         false,
+         true,
+         true));
+
     BorderPane pane = new BorderPane();
+
+    pane.setBackground(new Background(myBI));
 
     pane.setCenter(vbox);
     pane.setLeft(leftVB);
@@ -613,15 +752,17 @@ public class TurtleHermitSchoolOfMastery extends Application{
     lecHisHB.setAlignment(Pos.CENTER);
     edVidHisHB.setAlignment(Pos.CENTER);
     readHisHB.setAlignment(Pos.CENTER);
+    teachHisHB.setAlignment(Pos.CENTER);
     effortD.setAlignment(Pos.CENTER);
     effortC.setAlignment(Pos.CENTER);
     effortW.setAlignment(Pos.CENTER);
     effortL.setAlignment(Pos.CENTER);
     effortE.setAlignment(Pos.CENTER);
     effortR.setAlignment(Pos.CENTER);
+    effortT.setAlignment(Pos.CENTER);
 
 
-    Scene scene = new Scene(pane, 1000, 10000);
+    Scene scene = new Scene(pane, 1000, 1000);
     primaryStage.setScene(scene);
     primaryStage.show();
   }
@@ -630,39 +771,42 @@ public class TurtleHermitSchoolOfMastery extends Application{
     if(powerLevel < teenGoku){
       nextTransformationPL = teenGoku;
     }
-    else if(powerLevel > teenGoku && powerLevel < adultGoku){
+    else if(powerLevel >= teenGoku && powerLevel < adultGoku){
       nextTransformationPL = adultGoku;
     }
-    else if(powerLevel > adultGoku && powerLevel < SS1){
+    else if(powerLevel >= adultGoku && powerLevel < SS1){
       nextTransformationPL = SS1;
     }
-    else if(powerLevel > SS1 && powerLevel < SS2){
+    else if(powerLevel >= SS1 && powerLevel < SS2){
       nextTransformationPL = SS2;
     }
-    else if(powerLevel > SS2 && powerLevel < SS3){
+    else if(powerLevel >= SS2 && powerLevel < SS3){
       nextTransformationPL = SS3;
     }
-    else if(powerLevel > SS3 && powerLevel < SSGod){
+    else if(powerLevel >= SS3 && powerLevel < SSGod){
       nextTransformationPL = SSGod;
     }
-    else if(powerLevel > SSGod && powerLevel < SSBlue){
+    else if(powerLevel >= SSGod && powerLevel < SSBlue){
       nextTransformationPL = SSBlue;
     }
-    else if(powerLevel > SSBlue && powerLevel < SSBlueEv){
+    else if(powerLevel >= SSBlue && powerLevel < SSBlueEv){
       nextTransformationPL = SSBlueEv;
     }
-    else if(powerLevel > SSBlueEv && powerLevel < SSFullPower){
+    else if(powerLevel >= SSBlueEv && powerLevel < SSFullPower){
       nextTransformationPL = SSFullPower;
     }
-    else if(powerLevel > SSFullPower && powerLevel < UltraInstinct){
+    else if(powerLevel >= SSFullPower && powerLevel < UltraInstinct){
       nextTransformationPL = UltraInstinct;
     }
-    else if(powerLevel > UltraInstinct && powerLevel < MasteredUI){
+    else if(powerLevel >= UltraInstinct && powerLevel < MasteredUI){
       nextTransformationPL = MasteredUI;
     }
   }
 
   private void updateFile(){
+    JSONObject teachingTaskDetails = new JSONObject();
+    teachingTaskDetails.put("Task", "Teaching");
+    teachingTaskDetails.put("Count", teachingTasksCompleted);
     JSONObject designTaskDetails = new JSONObject();
     designTaskDetails.put("Task", "Designing");
     designTaskDetails.put("Count", designTasksCompleted);
@@ -687,6 +831,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
     user.put("Current Power Level", currentPL);
 
     JSONArray tasksArr = new JSONArray();
+    tasksArr.add(teachingTaskDetails);
     tasksArr.add(designTaskDetails);
     tasksArr.add(codingTaskDetails);
     tasksArr.add(writingTaskDetails);
@@ -725,13 +870,13 @@ public class TurtleHermitSchoolOfMastery extends Application{
 
 
     } catch (FileNotFoundException e) {
-        e.printStackTrace();
+        System.out.println("No Saved Progress");
         setDefaultValsForVars();
     } catch (IOException e) {
-        e.printStackTrace();
+        System.out.println("No Saved Progress");
         setDefaultValsForVars();
     } catch (ParseException e) {
-        e.printStackTrace();
+        System.out.println("No Saved Progress");
         setDefaultValsForVars();
     }
   }
@@ -740,6 +885,9 @@ public class TurtleHermitSchoolOfMastery extends Application{
     String taskName = (String) taskDetails.get("Task");
     System.out.println(taskName);
     switch(taskName){
+      case "Teaching":
+          this.teachingTasksCompleted = (long) taskDetails.get("Count");
+          break;
       case "Designing":
           this.designTasksCompleted = (long) taskDetails.get("Count");
           break;
@@ -762,6 +910,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
   }
 
   private void setDefaultValsForVars(){
+    this.teachingTasksCompleted = 0;
     this.designTasksCompleted = 0;
     this.codingTasksCompleted = 0;
     this.writingTasksCompleted = 0;
