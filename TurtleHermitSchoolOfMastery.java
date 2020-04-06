@@ -5,7 +5,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
 import javafx.scene.layout.*;
+import javafx.scene.transform.Scale;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.geometry.Pos;
@@ -26,6 +28,9 @@ public class TurtleHermitSchoolOfMastery extends Application{
 
   private double currentPL;
   private double nextTransformationPL;
+
+  private ImageView currImgView;
+  private ImageView nextImgView;
 
   private int expAddedFromDes;
   private int expAddedFromCode;
@@ -52,14 +57,54 @@ public class TurtleHermitSchoolOfMastery extends Application{
   private double SSGod = 1000000000.0;
   private double SSBlue = 2000000000.0;
   private double SSBlueEv = 4000000000.0;
-  private double SSFullPower = 5000000000.0;
   private double UltraInstinct = 8000000000.0;
   private double MasteredUI = 10000000000.0;
+
+  private VBox rightVB;
+  private VBox leftVB;
+
+  Image KGImg = new Image("./KG2.png");
+  ImageView KGImgView = new ImageView(KGImg);
+
+  Image TGImg = new Image("./TG1.png");
+  ImageView TGImgView = new ImageView(TGImg);
+
+  Image AGImg = new Image("./AG4.png");
+  ImageView AGImgView = new ImageView(AGImg);
+
+  Image SS1Img = new Image("./SS1.png");
+  ImageView SS1ImgView = new ImageView(SS1Img);
+
+  Image SS2Img = new Image("./SS2.png");
+  ImageView SS2ImgView = new ImageView(SS2Img);
+
+  Image SS3Img = new Image("./SS34.png");
+  ImageView SS3ImgView = new ImageView(SS3Img);
+
+  Image SSGImg = new Image("./SSG9.png");
+  ImageView SSGImgView = new ImageView(SSGImg);
+
+  Image SSBImg = new Image("./SSB.png");
+  ImageView SSBImgView = new ImageView(SSBImg);
+
+  Image SSBKImg = new Image("./SSBK.png");
+  ImageView SSBKImgView = new ImageView(SSBKImg);
+
+  Image GUIImg = new Image("./GUI.png");
+  ImageView GUIImgView = new ImageView(GUIImg);
+
+  Image GMUIImg = new Image("./GMUI3.png");
+  ImageView GMUIImgView = new ImageView(GMUIImg);
+
+  Image ALLGImg = new Image("./ALLG.jpg");
+  ImageView ALLGImgView = new ImageView(ALLGImg);
 
   @Override
   public void start(Stage primaryStage){
     setInstanceVarsFromFileOrDefault();
     setNextTransformation(currentPL);
+    setImages(currentPL);
+    adjustImageSize(currImgView, nextImgView);
 
     primaryStage.setTitle("Turtle Hermit School Of Mastery");
 
@@ -167,13 +212,15 @@ public class TurtleHermitSchoolOfMastery extends Application{
     expVB.getChildren().add(expBar);
 
 
-    VBox leftVB = new VBox();
+    leftVB = new VBox();
     leftVB.getChildren().add(currPowerLvl);
     leftVB.getChildren().add(currPLnum);
+    leftVB.getChildren().add(currImgView);
 
-    VBox rightVB = new VBox();
+    rightVB = new VBox();
     rightVB.getChildren().add(nextTransformation);
     rightVB.getChildren().add(nextTransformationTxt);
+    rightVB.getChildren().add(nextImgView);
 
     VBox bottomVB = new VBox(10);
     bottomVB.getChildren().add(history);
@@ -266,6 +313,10 @@ public class TurtleHermitSchoolOfMastery extends Application{
     }
     bt7.setOnAction(e -> {
       currentPL += expAddedFromTeach;
+      setNextTransformation(currentPL);
+      setImages(currentPL);
+      setImagesInUI(leftVB, rightVB);
+      adjustImageSize(currImgView, nextImgView);
       if(expAddedFromTeach != 0){
         teachingTasksCompleted += 1;
       }
@@ -278,6 +329,8 @@ public class TurtleHermitSchoolOfMastery extends Application{
       }
       String plStr = Double.toString(currentPL);
       currPLnum.setText(plStr);
+      String nextTranStr = Double.toString(nextTransformationPL);
+      nextTransformationTxt.setText(nextTranStr);
       expAddedFromTeach = 0;
       expBar.setProgress(currentPL / nextTransformationPL);
       String teachTasksCompletedStr = Long.toString(teachingTasksCompleted);
@@ -339,6 +392,10 @@ public class TurtleHermitSchoolOfMastery extends Application{
     }
     bt1.setOnAction(e -> {
       currentPL += expAddedFromDes;
+      setNextTransformation(currentPL);
+      setImages(currentPL);
+      setImagesInUI(leftVB, rightVB);
+      adjustImageSize(currImgView, nextImgView);
       if(expAddedFromDes != 0){
         designTasksCompleted += 1;
       }
@@ -351,6 +408,8 @@ public class TurtleHermitSchoolOfMastery extends Application{
       }
       String plStr = Double.toString(currentPL);
       currPLnum.setText(plStr);
+      String nextTranStr = Double.toString(nextTransformationPL);
+      nextTransformationTxt.setText(nextTranStr);
       expAddedFromDes = 0;
       expBar.setProgress(currentPL / nextTransformationPL);
       String desTasksCompletedStr = Long.toString(designTasksCompleted);
@@ -412,6 +471,10 @@ public class TurtleHermitSchoolOfMastery extends Application{
     }
     bt2.setOnAction(e -> {
       currentPL += expAddedFromCode;
+      setNextTransformation(currentPL);
+      setImages(currentPL);
+      setImagesInUI(leftVB, rightVB);
+      adjustImageSize(currImgView, nextImgView);
       if(expAddedFromCode != 0){
         codingTasksCompleted += 1;
       }
@@ -424,6 +487,8 @@ public class TurtleHermitSchoolOfMastery extends Application{
       }
       String plStr = Double.toString(currentPL);
       currPLnum.setText(plStr);
+      String nextTranStr = Double.toString(nextTransformationPL);
+      nextTransformationTxt.setText(nextTranStr);
       expAddedFromCode = 0;
       expBar.setProgress(currentPL / nextTransformationPL);
       String codeTasksCompletedStr = Long.toString(codingTasksCompleted);
@@ -485,6 +550,10 @@ public class TurtleHermitSchoolOfMastery extends Application{
     }
     bt3.setOnAction(e -> {
       currentPL += expAddedFromWrite;
+      setNextTransformation(currentPL);
+      setImages(currentPL);
+      setImagesInUI(leftVB, rightVB);
+      adjustImageSize(currImgView, nextImgView);
       if(expAddedFromWrite != 0){
         writingTasksCompleted += 1;
       }
@@ -497,6 +566,8 @@ public class TurtleHermitSchoolOfMastery extends Application{
       }
       String plStr = Double.toString(currentPL);
       currPLnum.setText(plStr);
+      String nextTranStr = Double.toString(nextTransformationPL);
+      nextTransformationTxt.setText(nextTranStr);
       expAddedFromWrite = 0;
       expBar.setProgress(currentPL / nextTransformationPL);
       String writingTasksCompletedStr = Long.toString(writingTasksCompleted);
@@ -558,6 +629,10 @@ public class TurtleHermitSchoolOfMastery extends Application{
     }
     bt4.setOnAction(e -> {
       currentPL += expAddedFromLect;
+      setNextTransformation(currentPL);
+      setImages(currentPL);
+      setImagesInUI(leftVB, rightVB);
+      adjustImageSize(currImgView, nextImgView);
       if(expAddedFromLect != 0){
         lectureTasksCompleted += 1;
       }
@@ -570,6 +645,8 @@ public class TurtleHermitSchoolOfMastery extends Application{
       }
       String plStr = Double.toString(currentPL);
       currPLnum.setText(plStr);
+      String nextTranStr = Double.toString(nextTransformationPL);
+      nextTransformationTxt.setText(nextTranStr);
       expAddedFromLect = 0;
       expBar.setProgress(currentPL / nextTransformationPL);
       String lectureTasksCompletedStr = Long.toString(lectureTasksCompleted);
@@ -631,6 +708,10 @@ public class TurtleHermitSchoolOfMastery extends Application{
     }
     bt5.setOnAction(e -> {
       currentPL += expAddedFromEdVid;
+      setNextTransformation(currentPL);
+      setImages(currentPL);
+      setImagesInUI(leftVB, rightVB);
+      adjustImageSize(currImgView, nextImgView);
       if(expAddedFromEdVid != 0){
         edVidTasksCompleted += 1;
       }
@@ -643,6 +724,8 @@ public class TurtleHermitSchoolOfMastery extends Application{
       }
       String plStr = Double.toString(currentPL);
       currPLnum.setText(plStr);
+      String nextTranStr = Double.toString(nextTransformationPL);
+      nextTransformationTxt.setText(nextTranStr);
       expAddedFromEdVid = 0;
       expBar.setProgress(currentPL / nextTransformationPL);
       String edVidTasksCompletedStr = Long.toString(edVidTasksCompleted);
@@ -704,6 +787,10 @@ public class TurtleHermitSchoolOfMastery extends Application{
     }
     bt6.setOnAction(e -> {
       currentPL += expAddedFromRead;
+      setNextTransformation(currentPL);
+      setImages(currentPL);
+      setImagesInUI(leftVB, rightVB);
+      adjustImageSize(currImgView, nextImgView);
       if(expAddedFromRead != 0){
         readingTasksCompleted += 1;
       }
@@ -716,6 +803,8 @@ public class TurtleHermitSchoolOfMastery extends Application{
       }
       String plStr = Double.toString(currentPL);
       currPLnum.setText(plStr);
+      String nextTranStr = Double.toString(nextTransformationPL);
+      nextTransformationTxt.setText(nextTranStr);
       expAddedFromRead = 0;
       expBar.setProgress(currentPL / nextTransformationPL);
       String readingTasksCompletedStr = Long.toString(readingTasksCompleted);
@@ -724,15 +813,17 @@ public class TurtleHermitSchoolOfMastery extends Application{
 
 
     BackgroundImage myBI= new BackgroundImage(new Image("./BG9.jpg"),
-        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-        new BackgroundSize(BackgroundSize.AUTO,
-        BackgroundSize.AUTO,
-         false,
-         false,
-         true,
-         true));
+      BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+      new BackgroundSize(BackgroundSize.AUTO,
+      BackgroundSize.AUTO,
+        false,
+        false,
+        true,
+        true));
 
     BorderPane pane = new BorderPane();
+
+    // pane.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
     pane.setBackground(new Background(myBI));
 
@@ -740,6 +831,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
     pane.setLeft(leftVB);
     pane.setRight(rightVB);
     pane.setBottom(bottomVB);
+
 
     leftVB.setAlignment(Pos.CENTER_LEFT);
     rightVB.setAlignment(Pos.CENTER_RIGHT);
@@ -762,8 +854,9 @@ public class TurtleHermitSchoolOfMastery extends Application{
     effortT.setAlignment(Pos.CENTER);
 
 
-    Scene scene = new Scene(pane, 1000, 1000);
+    Scene scene = new Scene(pane, 1300, 1000);
     primaryStage.setScene(scene);
+    // primaryStage.sizeToScene(); 
     primaryStage.show();
   }
 
@@ -792,10 +885,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
     else if(powerLevel >= SSBlue && powerLevel < SSBlueEv){
       nextTransformationPL = SSBlueEv;
     }
-    else if(powerLevel >= SSBlueEv && powerLevel < SSFullPower){
-      nextTransformationPL = SSFullPower;
-    }
-    else if(powerLevel >= SSFullPower && powerLevel < UltraInstinct){
+    else if(powerLevel >= SSBlueEv && powerLevel < UltraInstinct){
       nextTransformationPL = UltraInstinct;
     }
     else if(powerLevel >= UltraInstinct && powerLevel < MasteredUI){
@@ -918,5 +1008,68 @@ public class TurtleHermitSchoolOfMastery extends Application{
     this.edVidTasksCompleted = 0;
     this.readingTasksCompleted = 0;
     this.currentPL = 0;
+  }
+
+  private void setImages(double powerLevel){
+    if(powerLevel < teenGoku){
+      this.currImgView = KGImgView;
+      this.nextImgView = TGImgView;
+    }
+    else if(powerLevel >= teenGoku && powerLevel < adultGoku){
+      this.currImgView = TGImgView;
+      this.nextImgView = AGImgView;
+    }
+    else if(powerLevel >= adultGoku && powerLevel < SS1){
+      this.currImgView = AGImgView;
+      this.nextImgView = SS1ImgView;
+    }
+    else if(powerLevel >= SS1 && powerLevel < SS2){
+      this.currImgView = SS1ImgView;
+      this.nextImgView = SS2ImgView;
+    }
+    else if(powerLevel >= SS2 && powerLevel < SS3){
+      this.currImgView = SS2ImgView;
+      this.nextImgView = SS3ImgView;
+    }
+    else if(powerLevel >= SS3 && powerLevel < SSGod){
+      this.currImgView = SS3ImgView;
+      this.nextImgView = SSGImgView;
+    }
+    else if(powerLevel >= SSGod && powerLevel < SSBlue){
+      this.currImgView = SSGImgView;
+      this.nextImgView = SSBImgView;
+    }
+    else if(powerLevel >= SSBlue && powerLevel < SSBlueEv){
+      this.currImgView = SSBImgView;
+      this.nextImgView = SSBKImgView;
+    }
+    else if(powerLevel >= SSBlueEv && powerLevel < UltraInstinct){
+      this.currImgView = SSBKImgView;
+      this.nextImgView = GUIImgView;
+    }
+    else if(powerLevel >= UltraInstinct && powerLevel < MasteredUI){
+      this.currImgView = GUIImgView;
+      this.nextImgView = GMUIImgView;
+    }
+    else if(powerLevel >= MasteredUI){
+      this.currImgView = GMUIImgView;
+      this.nextImgView = ALLGImgView;
+    }
+  }
+
+  private void adjustImageSize(ImageView currImage, ImageView nextImage){
+    currImage.setFitHeight(350);
+    currImage.setPreserveRatio(true);
+
+    nextImage.setFitHeight(350);
+    nextImage.setPreserveRatio(true);
+  }
+
+  private void setImagesInUI(VBox currentTransformationVB, VBox nextTransformationVB){
+    currentTransformationVB.getChildren().remove(currentTransformationVB.getChildren().size()-1);
+    currentTransformationVB.getChildren().add(this.currImgView);
+
+    nextTransformationVB.getChildren().remove(nextTransformationVB.getChildren().size()-1);
+    nextTransformationVB.getChildren().add(this.nextImgView);
   }
 }
