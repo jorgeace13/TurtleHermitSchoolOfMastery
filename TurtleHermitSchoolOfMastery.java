@@ -8,6 +8,10 @@ import javafx.scene.layout.*;
 import javafx.scene.transform.Scale;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.effect.Glow;
+import javafx.util.Duration;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
 import javafx.stage.*;
 import javafx.scene.control.*;
 import javafx.geometry.Pos;
@@ -39,6 +43,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
   private int expAddedFromEdVid;
   private int expAddedFromRead;
   private int expAddedFromTeach;
+  private int expAddedFromDisc;
 
   private long designTasksCompleted;
   private long codingTasksCompleted;
@@ -47,6 +52,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
   private long edVidTasksCompleted;
   private long readingTasksCompleted;
   private long teachingTasksCompleted;
+  private long discussionTasksCompleted;
 
   private double kidGoku = 0.0;
   private double teenGoku = 500000.0;
@@ -133,6 +139,8 @@ public class TurtleHermitSchoolOfMastery extends Application{
     Reading.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text Teaching = new Text("Teaching - 700 exp");
     Teaching.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+    Text Discussion = new Text("Software Discussion - 650 exp");
+    Discussion.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     Text effD = new Text("Effort: ");
     effD.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
@@ -148,6 +156,8 @@ public class TurtleHermitSchoolOfMastery extends Application{
     effR.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
     Text effT = new Text("Effort: ");
     effT.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+    Text effCD = new Text("Effort: ");
+    effCD.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
     Text history = new Text("History");
     history.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
@@ -195,6 +205,12 @@ public class TurtleHermitSchoolOfMastery extends Application{
     Text teachingTasksCompletedNumTxt = new Text(teachTasCompletedStr);
     teachingTasksCompletedNumTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
 
+    Text discussionTasksCompletedTxt = new Text("Software Discussion Tasks Completed: ");
+    discussionTasksCompletedTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+    String discussionTasCompletedStr = Long.toString(discussionTasksCompleted);
+    Text discussionTasksCompletedNumTxt = new Text(discussionTasCompletedStr);
+    discussionTasksCompletedNumTxt.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+
     String currPLStr = Double.toString(currentPL);
     Text currPLnum = new Text(currPLStr);
     currPLnum.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
@@ -222,13 +238,17 @@ public class TurtleHermitSchoolOfMastery extends Application{
     rightVB.getChildren().add(nextTransformationTxt);
     rightVB.getChildren().add(nextImgView);
 
-    VBox bottomVB = new VBox(10);
+    VBox bottomVB = new VBox(8);
     bottomVB.getChildren().add(history);
 
     HBox teachHisHB = new HBox();
     teachHisHB.getChildren().add(teachingTasksCompletedTxt);
     teachHisHB.getChildren().add(teachingTasksCompletedNumTxt);
     bottomVB.getChildren().add(teachHisHB);
+    HBox discHisHB = new HBox();
+    discHisHB.getChildren().add(discussionTasksCompletedTxt);
+    discHisHB.getChildren().add(discussionTasksCompletedNumTxt);
+    bottomVB.getChildren().add(discHisHB);
     HBox desHisHB = new HBox();
     desHisHB.getChildren().add(designTasksCompletedTxt);
     desHisHB.getChildren().add(designTasksCompletedNumTxt);
@@ -254,7 +274,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
     readHisHB.getChildren().add(readingTasksCompletedNumTxt);
     bottomVB.getChildren().add(readHisHB);
     
-    VBox vbox = new VBox(25);
+    VBox vbox = new VBox(20);
     vbox.getChildren().add(expVB);
     vbox.getChildren().add(trainingRegimen);
 
@@ -312,6 +332,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
       teachingArr[i].setOnAction(teachHandler);
     }
     bt7.setOnAction(e -> {
+      setCompletedEffects(currImgView, currPLnum, expBar);
       currentPL += expAddedFromTeach;
       setNextTransformation(currentPL);
       setImages(currentPL);
@@ -321,7 +342,6 @@ public class TurtleHermitSchoolOfMastery extends Application{
         teachingTasksCompleted += 1;
       }
       updateFile();
-      System.out.println(currentPL);
       for(int i = 0; i < 10; i++){
         if(teachingArr[i].isSelected()){
           teachingArr[i].setSelected(false);
@@ -335,6 +355,85 @@ public class TurtleHermitSchoolOfMastery extends Application{
       expBar.setProgress(currentPL / nextTransformationPL);
       String teachTasksCompletedStr = Long.toString(teachingTasksCompleted);
       teachingTasksCompletedNumTxt.setText(teachTasksCompletedStr);
+    });
+
+
+    RadioButton[] discussionArr = new RadioButton[10];
+    ToggleGroup discussionGroup = new ToggleGroup();
+    HBox effortCD = new HBox(10);
+    effortCD.getChildren().add(effCD);
+    for(int j = 0; j < 10; j++){
+      int i = j + 1;
+      String s = Integer.toString(i);
+      RadioButton rbDisc = new RadioButton(s);
+      discussionArr[j] = rbDisc;
+      rbDisc.setToggleGroup(discussionGroup);
+      effortCD.getChildren().add(rbDisc);
+    }
+    vbox.getChildren().add(Discussion);
+    vbox.getChildren().add(effortCD);
+    Button bt8 = new Button("Complete");
+    effortCD.getChildren().add(bt8);
+
+    EventHandler<ActionEvent> discHandler = e -> {
+      if(discussionArr[0].isSelected()){
+        expAddedFromDisc = 650;
+      }
+      else if(discussionArr[1].isSelected()){
+        expAddedFromDisc = 1300;
+      }
+      else if(discussionArr[2].isSelected()){
+        expAddedFromDisc = 1950;
+      }
+      else if(discussionArr[3].isSelected()){
+        expAddedFromDisc = 2600;
+      }
+      else if(discussionArr[4].isSelected()){
+        expAddedFromDisc = 3250;
+      }
+      else if(discussionArr[5].isSelected()){
+        expAddedFromDisc = 3900;
+      }
+      else if(discussionArr[6].isSelected()){
+        expAddedFromDisc = 4550;
+      }
+      else if(discussionArr[7].isSelected()){
+        expAddedFromDisc = 5200;
+      }
+      else if(discussionArr[8].isSelected()){
+        expAddedFromDisc = 5850;
+      }
+      else if(discussionArr[9].isSelected()){
+        expAddedFromDisc = 6500;
+      }
+    };
+    for(int i = 0; i < discussionArr.length; i++){
+      discussionArr[i].setOnAction(discHandler);
+    }
+    bt8.setOnAction(e -> {
+      setCompletedEffects(currImgView, currPLnum, expBar);
+      currentPL += expAddedFromDisc;
+      setNextTransformation(currentPL);
+      setImages(currentPL);
+      setImagesInUI(leftVB, rightVB);
+      adjustImageSize(currImgView, nextImgView);
+      if(expAddedFromDisc != 0){
+        discussionTasksCompleted += 1;
+      }
+      updateFile();
+      for(int i = 0; i < 10; i++){
+        if(discussionArr[i].isSelected()){
+          discussionArr[i].setSelected(false);
+        }
+      }
+      String plStr = Double.toString(currentPL);
+      currPLnum.setText(plStr);
+      String nextTranStr = Double.toString(nextTransformationPL);
+      nextTransformationTxt.setText(nextTranStr);
+      expAddedFromDisc = 0;
+      expBar.setProgress(currentPL / nextTransformationPL);
+      String discTasksCompletedStr = Long.toString(discussionTasksCompleted);
+      discussionTasksCompletedNumTxt.setText(discTasksCompletedStr);
     });
 
 
@@ -391,6 +490,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
       designArr[i].setOnAction(desHandler);
     }
     bt1.setOnAction(e -> {
+      setCompletedEffects(currImgView, currPLnum, expBar);
       currentPL += expAddedFromDes;
       setNextTransformation(currentPL);
       setImages(currentPL);
@@ -400,7 +500,6 @@ public class TurtleHermitSchoolOfMastery extends Application{
         designTasksCompleted += 1;
       }
       updateFile();
-      System.out.println(currentPL);
       for(int i = 0; i < 10; i++){
         if(designArr[i].isSelected()){
           designArr[i].setSelected(false);
@@ -470,6 +569,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
       codeArr[i].setOnAction(codeHandler);
     }
     bt2.setOnAction(e -> {
+      setCompletedEffects(currImgView, currPLnum, expBar);
       currentPL += expAddedFromCode;
       setNextTransformation(currentPL);
       setImages(currentPL);
@@ -479,7 +579,6 @@ public class TurtleHermitSchoolOfMastery extends Application{
         codingTasksCompleted += 1;
       }
       updateFile();
-      System.out.println(currentPL);
       for(int i = 0; i < 10; i++){
         if(codeArr[i].isSelected()){
           codeArr[i].setSelected(false);
@@ -549,6 +648,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
       writeArr[i].setOnAction(writeHandler);
     }
     bt3.setOnAction(e -> {
+      setCompletedEffects(currImgView, currPLnum, expBar);
       currentPL += expAddedFromWrite;
       setNextTransformation(currentPL);
       setImages(currentPL);
@@ -558,7 +658,6 @@ public class TurtleHermitSchoolOfMastery extends Application{
         writingTasksCompleted += 1;
       }
       updateFile();
-      System.out.println(currentPL);
       for(int i = 0; i < 10; i++){
         if(writeArr[i].isSelected()){
           writeArr[i].setSelected(false);
@@ -628,6 +727,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
       lectArr[i].setOnAction(lectHandler);
     }
     bt4.setOnAction(e -> {
+      setCompletedEffects(currImgView, currPLnum, expBar);
       currentPL += expAddedFromLect;
       setNextTransformation(currentPL);
       setImages(currentPL);
@@ -637,7 +737,6 @@ public class TurtleHermitSchoolOfMastery extends Application{
         lectureTasksCompleted += 1;
       }
       updateFile();
-      System.out.println(currentPL);
       for(int i = 0; i < 10; i++){
         if(lectArr[i].isSelected()){
           lectArr[i].setSelected(false);
@@ -707,6 +806,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
       edVidArr[i].setOnAction(edVidHandler);
     }
     bt5.setOnAction(e -> {
+      setCompletedEffects(currImgView, currPLnum, expBar);
       currentPL += expAddedFromEdVid;
       setNextTransformation(currentPL);
       setImages(currentPL);
@@ -716,7 +816,6 @@ public class TurtleHermitSchoolOfMastery extends Application{
         edVidTasksCompleted += 1;
       }
       updateFile();
-      System.out.println(currentPL);
       for(int i = 0; i < 10; i++){
         if(edVidArr[i].isSelected()){
           edVidArr[i].setSelected(false);
@@ -786,6 +885,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
       readArr[i].setOnAction(readHandler);
     }
     bt6.setOnAction(e -> {
+      setCompletedEffects(currImgView, currPLnum, expBar);
       currentPL += expAddedFromRead;
       setNextTransformation(currentPL);
       setImages(currentPL);
@@ -795,7 +895,6 @@ public class TurtleHermitSchoolOfMastery extends Application{
         readingTasksCompleted += 1;
       }
       updateFile();
-      System.out.println(currentPL);
       for(int i = 0; i < 10; i++){
         if(readArr[i].isSelected()){
           readArr[i].setSelected(false);
@@ -823,8 +922,6 @@ public class TurtleHermitSchoolOfMastery extends Application{
 
     BorderPane pane = new BorderPane();
 
-    // pane.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-
     pane.setBackground(new Background(myBI));
 
     pane.setCenter(vbox);
@@ -845,6 +942,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
     edVidHisHB.setAlignment(Pos.CENTER);
     readHisHB.setAlignment(Pos.CENTER);
     teachHisHB.setAlignment(Pos.CENTER);
+    discHisHB.setAlignment(Pos.CENTER);
     effortD.setAlignment(Pos.CENTER);
     effortC.setAlignment(Pos.CENTER);
     effortW.setAlignment(Pos.CENTER);
@@ -852,11 +950,11 @@ public class TurtleHermitSchoolOfMastery extends Application{
     effortE.setAlignment(Pos.CENTER);
     effortR.setAlignment(Pos.CENTER);
     effortT.setAlignment(Pos.CENTER);
+    effortCD.setAlignment(Pos.CENTER);
 
 
     Scene scene = new Scene(pane, 1300, 1000);
     primaryStage.setScene(scene);
-    // primaryStage.sizeToScene(); 
     primaryStage.show();
   }
 
@@ -897,6 +995,9 @@ public class TurtleHermitSchoolOfMastery extends Application{
     JSONObject teachingTaskDetails = new JSONObject();
     teachingTaskDetails.put("Task", "Teaching");
     teachingTaskDetails.put("Count", teachingTasksCompleted);
+    JSONObject discussionTaskDetails = new JSONObject();
+    discussionTaskDetails.put("Task", "Discussion");
+    discussionTaskDetails.put("Count", discussionTasksCompleted);
     JSONObject designTaskDetails = new JSONObject();
     designTaskDetails.put("Task", "Designing");
     designTaskDetails.put("Count", designTasksCompleted);
@@ -922,6 +1023,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
 
     JSONArray tasksArr = new JSONArray();
     tasksArr.add(teachingTaskDetails);
+    tasksArr.add(discussionTaskDetails);
     tasksArr.add(designTaskDetails);
     tasksArr.add(codingTaskDetails);
     tasksArr.add(writingTaskDetails);
@@ -953,7 +1055,6 @@ public class TurtleHermitSchoolOfMastery extends Application{
       JSONObject user = (JSONObject) mainObj.get("User");
       double currPwrLvl = (double) user.get("Current Power Level");
       this.currentPL = currPwrLvl;
-      System.out.println(currentPL);
 
       JSONArray tasksArr = (JSONArray) mainObj.get("Tasks");
       tasksArr.forEach( task -> parseTaskDetails( (JSONObject) task ) );
@@ -973,10 +1074,12 @@ public class TurtleHermitSchoolOfMastery extends Application{
 
   private void parseTaskDetails(JSONObject taskDetails){
     String taskName = (String) taskDetails.get("Task");
-    System.out.println(taskName);
     switch(taskName){
       case "Teaching":
           this.teachingTasksCompleted = (long) taskDetails.get("Count");
+          break;
+      case "Discussion":
+          this.discussionTasksCompleted = (long) taskDetails.get("Count");
           break;
       case "Designing":
           this.designTasksCompleted = (long) taskDetails.get("Count");
@@ -1001,6 +1104,7 @@ public class TurtleHermitSchoolOfMastery extends Application{
 
   private void setDefaultValsForVars(){
     this.teachingTasksCompleted = 0;
+    this.discussionTasksCompleted = 0;
     this.designTasksCompleted = 0;
     this.codingTasksCompleted = 0;
     this.writingTasksCompleted = 0;
@@ -1071,5 +1175,44 @@ public class TurtleHermitSchoolOfMastery extends Application{
 
     nextTransformationVB.getChildren().remove(nextTransformationVB.getChildren().size()-1);
     nextTransformationVB.getChildren().add(this.nextImgView);
+  }
+
+  private void setCompletedEffects(ImageView currImgView, Text currPLText, ProgressBar expPB){
+    Glow glow0 = new Glow();
+    glow0.setLevel(0.0);
+    Glow glow1 = new Glow();
+    glow1.setLevel(1.0);
+
+    Timeline currimgeffect = new Timeline(
+        new KeyFrame(Duration.seconds(3.0),         event -> currImgView.setEffect(glow0)),
+        new KeyFrame(Duration.ZERO, event -> currImgView.setEffect(glow1))
+    );
+    currimgeffect.setAutoReverse(true);
+    currimgeffect.setCycleCount(1);
+    currimgeffect.play();
+
+    Timeline txtColorEffect = new Timeline(
+        new KeyFrame(Duration.seconds(3.0),         event -> currPLText.setFill(Color.BLACK)),
+        new KeyFrame(Duration.ZERO, event -> currPLText.setFill(Color.ORANGERED))
+    );
+    txtColorEffect.setAutoReverse(true);
+    txtColorEffect.setCycleCount(1);
+    txtColorEffect.play();
+
+    Timeline texteffect = new Timeline(
+        new KeyFrame(Duration.seconds(3.0),         event -> currPLText.setEffect(glow0)),
+        new KeyFrame(Duration.ZERO, event -> currPLText.setEffect(glow1))
+    );
+    texteffect.setAutoReverse(true);
+    texteffect.setCycleCount(1);
+    texteffect.play();
+
+    Timeline expPBeffect = new Timeline(
+        new KeyFrame(Duration.seconds(3.0),         event -> expPB.setEffect(glow0)),
+        new KeyFrame(Duration.ZERO, event -> expPB.setEffect(glow1))
+    );
+    expPBeffect.setAutoReverse(true);
+    expPBeffect.setCycleCount(1);
+    expPBeffect.play();
   }
 }
